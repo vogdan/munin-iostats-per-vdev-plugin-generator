@@ -18,12 +18,12 @@ For each vdev we'll have 4 plugins showing:
        Script used to generate munin plugins from the output of "iostat -xn 1 1" and "zpool iostat"  
  
  SYNOPSIS
+ --------
     generator type [symlink_path [clean]]
  
  PARAMETERS
  ----------
- type - mandatory
-       ACCEPTED VALUES: "utilization", "responsiveness", "bandwidth" or "operations" 
+  - type - mandatory - accepdet values: "utilization", "responsiveness", "bandwidth" or "operations" 
 
            - utilization : will use generator_utilization.gen to generate munin plugins that graph the %b ans %w 
                                                                values as of 'iostat -xn 1 1' for all devices of each 
@@ -41,11 +41,9 @@ For each vdev we'll have 4 plugins showing:
                                                                values as of 'zpool iostat -v' for all devices of each 
                                                                vdev found in the pool groups shown by 'zpool iostat'
 
- symlink_path - optional
-       Path to create symlinks for generated plugins (to aid in plugin install)     
+  - symlink_path - optional - Path to create symlinks for generated plugins (to aid in plugin install)     
 
- clean - optional
-       Only works as the third argument and cleans all files and symlink created in a previous run by this script
+  - clean - optional - Only works as the third argument and cleans all files and symlink created in a previous run by this script
  
  EXAMPLES
  --------
