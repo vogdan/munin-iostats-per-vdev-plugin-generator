@@ -17,13 +17,14 @@ For each vdev we'll have 4 plugins showing:
 #
        Script used to generate munin plugins from the output of "iostat -xn 1 1" and "zpool iostat"  
  
- SYNOPSIS
- --------
-    generator type [symlink_path [clean]]
+  SYNOPSIS
+
+              generator type [symlink_path [clean]]
  
- PARAMETERS
- ----------
-  - type - mandatory - accepdet values: "utilization", "responsiveness", "bandwidth" or "operations" 
+  PARAMETERS
+
+
+    - type - mandatory - accepdet values: "utilization", "responsiveness", "bandwidth" or "operations" 
 
            - utilization : will use generator_utilization.gen to generate munin plugins that graph the %b ans %w 
                                                                values as of 'iostat -xn 1 1' for all devices of each 
@@ -41,29 +42,31 @@ For each vdev we'll have 4 plugins showing:
                                                                values as of 'zpool iostat -v' for all devices of each 
                                                                vdev found in the pool groups shown by 'zpool iostat'
 
-  - symlink_path - optional - Path to create symlinks for generated plugins (to aid in plugin install)     
+    - symlink_path - optional - Path to create symlinks for generated plugins (to aid in plugin install)     
 
-  - clean - optional - Only works as the third argument and cleans all files and symlink created in a previous run by this script
+    - clean - optional - Only works as the third argument and cleans all files and symlink created in a previous run by this script
  
- EXAMPLES
- --------
-       ./generator.sh utilization
+  
+  EXAMPLES
+  
+       - Create plugins (in the current dir) for each vdev found via zpool iostat:
+             
+              ./generator.sh utilization
 
-                  -creates plugins (in the current dir) for each vdev found via zpool iostat.
-       
-       ./generator_utilization.sh utilization /opt/munin/plugins
-
-                  -creates plugins and adds symbolic links to these plugins at the specified path
-       
-       ./generator_utilization.sh utilization /opt/munin/plugins clean
+       - Create plugins and adds symbolic links to these plugins at the specified path
+              
+              ./generator_utilization.sh utilization /opt/munin/plugins
                   
-                  -deletes all plugins created by this script in the current dir and unlinks symlinks      
+       - Delete all plugins created by this script in the current dir and unlinks symlinks 
        
- NOTES
- -----
+              ./generator_utilization.sh utilization /opt/munin/plugins clean
+                  
+  
+  NOTES
+ 
        Will not work for pools with no vdevs
 
 
- LICENSE
- -------
-       GPLv2
+#  LICENSE
+ 
+          GPLv2
