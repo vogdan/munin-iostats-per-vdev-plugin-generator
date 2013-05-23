@@ -24,21 +24,21 @@ For each vdev we'll have 4 plugins showing:
   PARAMETERS
 
 
-    - type - mandatory - accepdet values: "utilization", "responsiveness", "bandwidth" or "operations" 
+    - type - mandatory - Accepded values:  
 
-           - utilization : will use generator_utilization.gen to generate munin plugins that graph the %b ans %w 
+              - "utilization" : will use generator_utilization.gen to generate munin plugins that graph the %b ans %w 
                                                                values as of 'iostat -xn 1 1' for all devices of each 
                                                                vdev found in the pool groups shown by 'zpool iostat'
 
-           - responsiveness: will use generator_responsiveness.gen to generate munin plugins that graph the asvc_t 
+              - "responsiveness": will use generator_responsiveness.gen to generate munin plugins that graph the asvc_t 
                                                                value as of 'iostat -xn 1 1' for all devices of each 
                                                                vdev found in the pool groups shown by 'zpool iostat'
 
-           - bandwith: will use generator_bandwith.gen to generate munin plugins that graph the bandwidth read/write 
+              - "bandwith": will use generator_bandwith.gen to generate munin plugins that graph the bandwidth read/write 
                                                                values as of 'zpool iostat -v' for all devices of each 
                                                                vdev found in the pool groups shown by 'zpool iostat'
 
-           - operations: will use generator_operations.gen to generate munin plugins that graph the operations read/write
+              - "operations": will use generator_operations.gen to generate plugins that graph the operations read/write
                                                                values as of 'zpool iostat -v' for all devices of each 
                                                                vdev found in the pool groups shown by 'zpool iostat'
 
@@ -64,7 +64,7 @@ For each vdev we'll have 4 plugins showing:
   
   NOTES
  
-       Will not work for pools with no vdevs
+       Will not work properly for pools with no vdevs
 
 
 #  LICENSE
