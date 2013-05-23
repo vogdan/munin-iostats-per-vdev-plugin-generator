@@ -1,0 +1,88 @@
+#!/bin/bash
+
+##
+#
+# *** see generator.sh for details ***
+#
+
+PLUGIN_NAME=$1
+NAME=$2
+NUMBER=$3
+DEVS=$4
+GREP_DEVS=$5
+
+cat <<EOF > $PLUGIN_NAME
+#!/bin/bash
+
+: << =cut
+
+=head1 NAME
+
+$PLUGIN_NAME - responsiveness graf for all devices of vdev $NUMBER in zpool $NAME
+
+=head1 NOTES
+
+Graph showing responsiveness (asvc_t) as of iostat -xn (asvc_t field) by zpool vdevs.
+
+*** Automatically generated via shell script $PWD/$JE ***
+*** $(date) ***
+
+=head1 AUTHOR
+
+Bogdan Dumitrica
+
+=head1 LICENSE
+
+GPLv2
+
+=head1 MAGIC MARKERS
+
+=cut
+
+
+doConfig() {
+	printf "graph_title asvc_t for zpool '$NAME' vdev $NUMBER\n"
+	printf "graph_info iostat asvc_t value for all devices in vdev $NUMBER of zpool group '$NAME'\n"
+	printf "graph_args --base 1000 -l 0\n"
+	printf "graph_scale no\n"
+	printf "graph_vlabel asvc_t (milliseconds)\n"
+	printf "graph_category system\n"
+	for DEV in "$DEVS"
+	do
+		printf "\${DEV}_asvc_t.label asvc_t for \$DEV in '$NAME' vdev $NUMBER\n"
+		printf "\${DEV}_asvc_t.draw LINE\n"
+	done	
+}
+
+doFetch() {
+	iostat -xn 1 1 | egrep '$GREP_DEVS' | awk '{ printf "%s_asvc_t.value %s\n", \$11, \$8 }'
+#	cat /home/bogdan/iostat.txt | egrep '$GREP_DEVS' | awk '{ printf "%s_asvc_t.value %s\n", \$11, \$8 }'
+}
+ 
+output_usage() {
+	printf >&2 "%s - munin plugin - iostat asvc_t for all devs in $NAME vdev $NUMBER\n" \${0##*/}
+	printf >&2 "Usage: %s [config]\n" \${0##*/}
+}
+
+case \$# in
+    0)
+        doFetch
+        ;;
+    1)
+        case \$1 in
+            config)
+		        doConfig
+                ;;
+            *)
+                output_usage
+                exit 1
+                ;;
+        esac
+        ;;
+    *)
+        output_usage
+        exit 1
+        ;;
+esac
+EOF
+
