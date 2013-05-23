@@ -18,8 +18,7 @@ For each vdev we'll have 4 plugins showing:
        Script used to generate munin plugins from the output of "iostat -xn 1 1" and "zpool iostat"  
  
  SYNOPSIS
- --------
-       generator type [symlink_path [clean]]
+    generator type [symlink_path [clean]]
  
  PARAMETERS
  ----------
