@@ -48,20 +48,13 @@ For each vdev we'll have 4 plugins showing:
  EXAMPLES
  --------
        ./generator.sh utilization
-       
-               -creates plugins (in the current dir) for each vdev found via zpool iostat.
+                  -creates plugins (in the current dir) for each vdev found via zpool iostat.
        
        ./generator_utilization.sh utilization /opt/munin/plugins
-
                   -creates plugins and adds symbolic links to these plugins at the specified path
        
        ./generator_utilization.sh utilization /opt/munin/plugins clean
-
-                  -deletes all plugins created by this script in the current dir and unlinks symlinks
-
- OUTPUT
- ------
-           
+                  -deletes all plugins created by this script in the current dir and unlinks symlinks      
        
  NOTES
  -----
