@@ -9,7 +9,6 @@ PLUGIN_NAME=$1
 NAME=$2
 NUMBER=$3
 DEVS=$4
-GREP_DEVS=$5
 
 cat <<EOF > $PLUGIN_NAME
 #!/bin/bash
@@ -47,7 +46,7 @@ doConfig() {
 	printf "graph_scale no\n"
 	printf "graph_vlabel bandwidth read/write (K)\n"
 	printf "graph_category system\n"
-	for DEV in "$DEVS"
+	for DEV in $DEVS
 	do
 		printf "\${DEV}_bw_r.label zpool bandwidth read for \$DEV in '$NAME' vdev $NUMBER\n"
 		printf "\${DEV}_bw_r.draw LINE\n"
@@ -57,12 +56,23 @@ doConfig() {
 }
 
 doFetch() {
-	zpool iostat -v| egrep "$GREP_DEVS" | sed 's/K\ //g;s/K$//g' | awk '{ 
-		printf "%s_bw_r.value %s\n", \$1, \$6
-		printf "%s_bw_w.value %s\n", \$1, \$7 }'
-#	cat /home/bogdan/zpoolverb.txt | egrep "$GREP_DEVS" | sed 's/K\ //g;s/K$//g' | awk '{ 
-#		printf "%s_bw_r.value %s\n", \$1, \$6
-#		printf "%s_bw_w.value %s\n", \$1, \$7 }'
+    GREP_DEVS="`echo $DEVS | sed 's/ /|/g'`"
+
+#	cat /home/bogdan/zpoolverb.txt | egrep \$GREP_DEVS | sed 's/K\ //g;s/K$//g' | awk '{
+	zpool iostat -v| egrep \$GREP_DEVS | sed 's/K\ //g;s/K$//g' | awk '{ 
+        if ( \$6 ~ /.*M/ ) {        
+            split(\$6, arr, "M")
+            printf "%s_bw_w.value %s\n", \$1, arr[1] * 1024
+        } else { 
+            printf "%s_bw_r.value %s\n", \$1, \$6
+        }        
+        if ( \$7 ~ /.*M/ ) { 
+            split(\$7, arr, "M")
+            printf "%s_bw_w.value %s\n", \$1, arr[1] * 1024
+        } else {
+            printf "%s_bw_w.value %s\n", \$1, \$7
+        }
+    }'   
 }
  
 output_usage() {
