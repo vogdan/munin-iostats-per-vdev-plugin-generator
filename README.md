@@ -19,7 +19,7 @@ For each vdev we'll have 4 plugins showing:
  
   SYNOPSIS
 
-              generator type [symlink_path [clean]]
+              generator.sh <type> [<symlink_path> [clean]]
  
   PARAMETERS
 
