@@ -13,14 +13,21 @@
 # ----------
 # type - mandatory
 #       ACCEPTED VALUES: "utilization" or "responsiveness"
+#          - "utilization" : will use generator_utilization.gen to generate munin plugins that graph the %b ans %w 
+#                                                           values as of 'iostat -xn 1 1' for all devices of each 
+#                                                           vdev found in the pool groups shown by 'zpool iostat'
 #
-#           - utilization : will use generator_utilization.gen to generate munin plugins that graph the %b ans %w values 
-#                                                               as of 'iostat -xn 1 1' for all devices of all vdevs 
-#                                                               found in the pool groups shown by 'zpool iostat'
+#          - "responsiveness": will use generator_responsiveness.gen to generate munin plugins that graph the asvc_t 
+#                                                           value as of 'iostat -xn 1 1' for all devices of each 
+#                                                           vdev found in the pool groups shown by 'zpool iostat'
 #
-#           - responsiveness: will use generator_responsiveness.gen to generate munin plugins that graph the asvc_t value 
-#                                                               as of 'iostat -xn 1 1' for all devices of all vdevs 
-#                                                               found in the pool groups shown by 'zpool iostat'
+#          - "bandwith": will use generator_bandwith.gen to generate munin plugins that graph the bandwidth read/write 
+#                                                           values as of 'zpool iostat -v' for all devices of each 
+#                                                           vdev found in the pool groups shown by 'zpool iostat'
+#
+#          - "operations": will use generator_operations.gen to generate plugins that graph the operations read/write
+#                                                           values as of 'zpool iostat -v' for all devices of each 
+#                                                           vdev found in the pool groups shown by 'zpool iostat'
 #
 # symlink_path - optional
 #       Path to create symlinks to generated plugins (to aid in plugin install)     
@@ -72,11 +79,9 @@ ACCEPTED_TYPES=""
 #
 writePlugin() {
 
-	NAME=`echo $@ | awk '{print $1}'`
-    NUMBER=`echo $@ | awk '{print $2}'` 
-    DEVS=`echo $@ | sed "s/$NAME //" | sed "s/$NUMBER //"`
-    GREP_DEVS=`echo $DEVS | sed 's/ /|/g' | sed 's/s[0-9][0-9]*//g'`
-
+	NAME=$1
+    NUMBER=$2 
+    DEVS=$3
     PLUGIN_NAME=${NAME}_vdev-${NUMBER}_$TYPE
     echo "$PLUGIN_NAME"
 
@@ -103,7 +108,7 @@ writePlugin() {
     
     echo "\tCreating plugin file..."
 
-    ./generator_${TYPE}.gen $PLUGIN_NAME $NAME $NUMBER $DEVS $GREP_DEVS
+    ./generator_${TYPE}.gen "$PLUGIN_NAME" "$NAME" "$NUMBER" "$DEVS"
     if [ $? != 0 ]
     then 
         exit
@@ -144,7 +149,7 @@ do
                 VDEV=`echo $VDEVS | cut -d'_' -f${i}`
                 if [ "$VDEV" != "" ] 
                 then
-      		        writePlugin "$NAME $(expr $i - 1) $VDEV"
+      		        writePlugin "$NAME" "$(expr $i - 1)" "$VDEV"
                 else
                     break
                 fi
