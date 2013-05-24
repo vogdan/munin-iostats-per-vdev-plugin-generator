@@ -8,8 +8,7 @@
 PLUGIN_NAME=$1
 NAME=$2
 NUMBER=$3
-DEVS=$4
-GREP_DEVS=$5
+DEVS=`echo $4 | sed 's/s[0-9][0-9]*//g'`
 
 cat <<EOF > $PLUGIN_NAME
 #!/bin/bash
@@ -47,7 +46,7 @@ doConfig() {
 	printf "graph_scale no\n"
 	printf "graph_vlabel asvc_t (milliseconds)\n"
 	printf "graph_category system\n"
-	for DEV in "$DEVS"
+	for DEV in $DEVS
 	do
 		printf "\${DEV}_asvc_t.label asvc_t for \$DEV in '$NAME' vdev $NUMBER\n"
 		printf "\${DEV}_asvc_t.draw LINE\n"
@@ -55,8 +54,9 @@ doConfig() {
 }
 
 doFetch() {
-	iostat -xn 1 1 | egrep '$GREP_DEVS' | awk '{ printf "%s_asvc_t.value %s\n", \$11, \$8 }'
-#	cat /home/bogdan/iostat.txt | egrep '$GREP_DEVS' | awk '{ printf "%s_asvc_t.value %s\n", \$11, \$8 }'
+    GREP_DEVS="`echo $DEVS | sed 's/ /|/g'`"
+	iostat -xn 1 1 | egrep \$GREP_DEVS | awk '{ printf "%s_asvc_t.value %s\n", \$11, \$8 }'
+#	cat /home/bogdan/iostat.txt | egrep \$GREP_DEVS | awk '{ printf "%s_asvc_t.value %s\n", \$11, \$8 }'
 }
  
 output_usage() {
