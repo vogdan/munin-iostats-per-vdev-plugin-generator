@@ -40,7 +40,7 @@ GPLv2
 
 
 doConfig() {
-	printf "graph_title operations read/write numbers for  zpool '$NAME' vdev $NUMBER\n"
+	printf "graph_title IOPS - read/write numbers for  zpool '$NAME' vdev $NUMBER\n"
 	printf "graph_info iostat number of read and write operations for all devices in vdev $NUMBER of zpool group '$NAME'\n"
 	printf "graph_args --base 1000 -l 0\n"
 	printf "graph_scale no\n"
