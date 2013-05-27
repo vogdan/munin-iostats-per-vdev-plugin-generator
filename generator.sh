@@ -12,7 +12,8 @@
 # PARAMETERS
 # ----------
 # type - mandatory
-#       ACCEPTED VALUES: "utilization" or "responsiveness"
+#       ACCEPTED VALUES:
+#
 #          - "utilization" : will use generator_utilization.gen to generate munin plugins that graph the %b ans %w 
 #                                                           values as of 'iostat -xn 1 1' for all devices of each 
 #                                                           vdev found in the pool groups shown by 'zpool iostat'
@@ -28,6 +29,9 @@
 #          - "operations": will use generator_operations.gen to generate plugins that graph the operations read/write
 #                                                           values as of 'zpool iostat -v' for all devices of each 
 #                                                           vdev found in the pool groups shown by 'zpool iostat'
+#
+#          - "storage": will use generator_storage.gen to generate plugins that graph the capacity alloc/free values as
+#                                                           of 'zpool iostat' for all pool groups
 #
 # symlink_path - optional
 #       Path to create symlinks to generated plugins (to aid in plugin install)     
@@ -82,7 +86,13 @@ writePlugin() {
 	NAME=$1
     NUMBER=$2 
     DEVS=$3
-    PLUGIN_NAME=${NAME}_vdev-${NUMBER}_$TYPE
+
+    if [ "$TYPE" = "storage" ];
+    then
+        PLUGIN_NAME=${NAME}_$TYPE
+    else
+        PLUGIN_NAME=${NAME}_vdev-${NUMBER}_$TYPE
+    fi    
     echo "$PLUGIN_NAME"
 
     if [[ -n $LINK_PATH ]]
@@ -96,7 +106,7 @@ writePlugin() {
 
     if [ -e $PLUGIN_NAME ]
     then
-        echo "\tDeleting $PLUGIN_NAME ..."
+        echo "\tDeleting ${PLUGIN_NAME}..."
         rm -rf $PLUGIN_NAME        
     fi
 
@@ -134,25 +144,30 @@ fi
 ARRAY_NAMES=`zpool iostat | awk '{print $1}'`
 #ARRAY_NAMES=`cat /home/bogdan/zpool.txt | awk '{print $1}'`
 
-ARRAY_NAMES=`echo $ARRAY_NAMES | sed 's/^capac.*----\ //'`
+ARRAY_NAMES=`echo $ARRAY_NAMES | sed 's/^capac.*----\ //;s/\ -*$//'`
 
 for ARRAY_NAME in $ARRAY_NAMES
 do
-	ARRAY_DETAILS=`zpool iostat -v | awk "/$ARRAY_NAME/, /--+/" | sed '/^[ -]*$/d' | awk '{print $1}'`
-#	ARRAY_DETAILS=`cat /home/bogdan/zpoolverb.txt | awk "/$ARRAY_NAME/, /--+/" | sed '/^[ -]*$/d' | awk '{print $1}'`
-	if [ "$ARRAY_DETAILS" != "" ]
+    if [ "$TYPE" = "storage" ];
     then
-        	NAME=`echo $ARRAY_DETAILS | awk '{print $1}'`
-	        VDEVS=`echo $ARRAY_DETAILS | sed "s/$NAME//;s/ mirror /_/g"`
-            for (( i=2; i<${MAX_VDEVS}; i++ ));
-            do                 
-                VDEV=`echo $VDEVS | cut -d'_' -f${i}`
-                if [ "$VDEV" != "" ] 
-                then
-      		        writePlugin "$NAME" "$(expr $i - 1)" "$VDEV"
-                else
-                    break
-                fi
-            done
-	fi
+        writePlugin "$ARRAY_NAME"       
+    else
+	    ARRAY_DETAILS=`zpool iostat -v | awk "/$ARRAY_NAME/, /--+/" | sed '/^[ -]*$/d' | awk '{print $1}'`
+#	    ARRAY_DETAILS=`cat /home/bogdan/zpoolverb.txt | awk "/$ARRAY_NAME/, /--+/" | sed '/^[ -]*$/d' | awk '{print $1}'`
+	    if [ "$ARRAY_DETAILS" != "" ]
+        then
+            	NAME=`echo $ARRAY_DETAILS | awk '{print $1}'`
+	            VDEVS=`echo $ARRAY_DETAILS | sed "s/$NAME//;s/ mirror /_/g"`
+                for (( i=2; i<${MAX_VDEVS}; i++ ));
+                do                 
+                    VDEV=`echo $VDEVS | cut -d'_' -f${i}`
+                    if [ "$VDEV" != "" ] 
+                    then
+      	    	        writePlugin "$NAME" "$(expr $i - 1)" "$VDEV"
+                    else
+                        break
+                    fi
+                done
+	    fi
+    fi
 done
