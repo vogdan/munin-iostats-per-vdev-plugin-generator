@@ -57,7 +57,7 @@ doFetch() {
 		printf "%s_st_f.value %s\n", \$1, \$3 }'
 #	cat /home/bogdan/zpoolverb.txt | egrep $NAME | sed 's/G\ //g;s/G$//g' | awk '{ 
 #		printf "%s_st_a.value %s\n", \$1, \$2
-#		printf "%s_st_a.value %s\n", \$1, \$3 }'
+#		printf "%s_st_f.value %s\n", \$1, \$3 }'
 }
  
 output_usage() {
