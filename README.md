@@ -42,6 +42,9 @@ For each vdev we'll have 4 plugins showing:
                                                                values as of 'zpool iostat -v' for all devices of each 
                                                                vdev found in the pool groups shown by 'zpool iostat'
 
+              - "storage": will use generator_storage.gen to generate plugins that graph the capacity alloc/free values 
+                                                               as of 'zpool iostat' for all pool groups
+
     - symlink_path - optional - Path to create symlinks for generated plugins (to aid in plugin install)     
 
     - clean - optional - Only works as the third argument and cleans all files and symlink created in a previous run by this script
