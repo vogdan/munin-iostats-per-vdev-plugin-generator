@@ -15,19 +15,19 @@
 #       ACCEPTED VALUES:
 #
 #          - "utilization" : will use generator_utilization.gen to generate munin plugins that graph the %b ans %w 
-#                                                           values as of 'iostat -xn 1 1' for all devices of each 
+#                                                           values from 'iostat -xn 1 1' for all devices of each 
 #                                                           vdev found in the pool groups shown by 'zpool iostat'
 #
 #          - "responsiveness": will use generator_responsiveness.gen to generate munin plugins that graph the asvc_t 
-#                                                           value as of 'iostat -xn 1 1' for all devices of each 
+#                                                           value from 'iostat -xn 1 1' for all devices of each 
 #                                                           vdev found in the pool groups shown by 'zpool iostat'
 #
 #          - "bandwith": will use generator_bandwith.gen to generate munin plugins that graph the bandwidth read/write 
-#                                                           values as of 'zpool iostat -v' for all devices of each 
+#                                                           values from 'zpool iostat -v' for all devices of each 
 #                                                           vdev found in the pool groups shown by 'zpool iostat'
 #
 #          - "operations": will use generator_operations.gen to generate plugins that graph the operations read/write
-#                                                           values as of 'zpool iostat -v' for all devices of each 
+#                                                           values from 'zpool iostat -v' for all devices of each 
 #                                                           vdev found in the pool groups shown by 'zpool iostat'
 #
 #          - "storage": will use generator_storage.gen to generate plugins that graph the capacity alloc/free values as
