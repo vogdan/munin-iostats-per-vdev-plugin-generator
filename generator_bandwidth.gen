@@ -40,7 +40,7 @@ GPLv2
 
 
 doConfig() {
-	printf "graph_title bandwidth read/write for  zpool '$NAME' vdev $NUMBER\n"
+	printf "graph_title bandwidth read/write for zpool '$NAME' vdev $NUMBER\n"
 	printf "graph_info iostat bandwidth read and write values for all devices in vdev $NUMBER of zpool group '$NAME'\n"
 	printf "graph_args --base 1000 -l 0\n"
 	printf "graph_scale no\n"
@@ -62,7 +62,7 @@ doFetch() {
 	zpool iostat -v| egrep \$GREP_DEVS | sed 's/K\ //g;s/K$//g' | awk '{ 
         if ( \$6 ~ /.*M/ ) {        
             split(\$6, arr, "M")
-            printf "%s_bw_w.value %s\n", \$1, arr[1] * 1024
+            printf "%s_bw_r.value %s\n", \$1, arr[1] * 1024
         } else { 
             printf "%s_bw_r.value %s\n", \$1, \$6
         }        
