@@ -10,7 +10,7 @@ For each vdev we'll have 4 plugins showing:
   - bandwidth (read/write) columns from zpool iostat -v
   - utilization (busy/wait - %w and %b) columns from iostat -xn 1 1 
   - responsiveness (asvc_t) column form iostat -xn 1 1.
- 
+  - storage (capacity - alloc/free) columns from zpool iostat -v 
  
 #
 # generator.sh
