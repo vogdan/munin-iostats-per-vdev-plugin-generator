@@ -5,7 +5,7 @@ Shell script to generate munin plugins that show by ZFS zpool vdevs the disk act
 in terms of latency, throughput, %b, %w, etc. Basically, the output from
 iostat -xn 1 1 and zpool iostat -v but arranged in groupings of vdevs.
 
-For each vdev we'll have 4 plugins showing:  
+For each vdev we'll have 5 plugins showing:  
   - operations (read/writes) columns from zpool iostat -v
   - bandwidth (read/write) columns from zpool iostat -v
   - utilization (busy/wait - %w and %b) columns from iostat -xn 1 1 
