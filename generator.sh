@@ -77,10 +77,6 @@ MAX_VDEVS=10
 ACCEPTED_TYPES=""
 
 
-#######################################################################
-#
-# Generate the plugin
-#
 writePlugin() {
 
 	NAME=$1
@@ -133,6 +129,8 @@ writePlugin() {
         ln -s $PWD/$PLUGIN_NAME $LINK_PATH/$PLUGIN_NAME
     fi
 } 
+
+
 
 if [ $# -gt 0 ]
 then
