@@ -1,7 +1,7 @@
 munin-iostats-per-vdev-plugin-generator
 =======================================
 
-Shell script to generate munin plugins that show by ZFS zpool vdevs the disk activity
+Shell script to generate Munin plugins that show by ZFS zpool vdevs the disk activity
 in terms of latency, throughput, %b, %w, etc. Basically, the output from
 iostat -xn 1 1 and zpool iostat -v but arranged in groupings of vdevs.
 
